@@ -1,18 +1,37 @@
+const User = require('../users/users-model');
+
 function logger(req, res, next)
 {
     console.log(
-        `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.get(
-            'Origin'
-        )}`
+        `[${new Date().toLocaleString()}] 
+        ${req.method} to 
+        ${req.originalUrl} from 
+        ${req.get('Origin')}`
     );
     next();
 }
 
-function validateUserId(req, res, next)
+async function validateUserId(req, res, next)
 {
-    console.log('validateUserId middlewear');
-    next();
-    // DO YOUR MAGIC
+    try
+    {
+        const user = await User.getById(req.params.id);
+        if (!user)
+        {
+            res.status(404).json({
+                message: 'user not found'
+            });
+        } else
+        {
+            req.user = user;
+        }
+    } catch (err)
+    {
+res.status(500).json({
+    message: 'user not found'
+})
+    }
+
 }
 
 function validateUser(req, res, next)
