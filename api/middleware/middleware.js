@@ -3,7 +3,7 @@ const User = require('../users/users-model');
 function logger(req, res, next)
 {
     console.log(
-        `[${new Date().toISOString()}] ${req.method} to ${req.originalUrl}`
+        `[${new Date().toISOString()}] ${req.method} to ${req.originalUrl}]`
     );
     next();
 }
@@ -15,7 +15,7 @@ async function validateUserId(req, res, next)
         const user = await User.getById(req.params.id);
         if (!user)
         {
-            res.status(404).json({
+            res.status(400).json({
                 message: 'user not found'
             });
         } else
@@ -33,16 +33,32 @@ async function validateUserId(req, res, next)
 
 function validateUser(req, res, next)
 {
-    console.log('validateUser Idmiddlewear');
-    next();
-    // DO YOUR MAGIC
+    const { name } = req.body;
+    if (!name || !name.trim())
+    {
+        res.status(400).json({
+            message: 'missing required name field'
+        });
+    } else
+    {
+        req.name = name.trim();
+        next();
+    }
 }
 
 function validatePost(req, res, next)
 {
-    console.log('validatePost middlewear');
-    next();
-    // DO YOUR MAGIC
+    const { text } = req.body;
+    if (!text || !text.trim())
+    {
+        res.status(400).json({
+            message: 'missing required text field'
+        });
+    } else
+    {
+        req.text = text.trim();
+        next();
+    }
 }
 
 // do not forget to expose these functions to other modules
