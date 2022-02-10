@@ -3,10 +3,7 @@ const User = require('../users/users-model');
 function logger(req, res, next)
 {
     console.log(
-        `[${new Date().toLocaleString()}] 
-        ${req.method} to 
-        ${req.originalUrl} from 
-        ${req.get('Origin')}`
+        `[${new Date().toISOString()}] ${req.method} to ${req.originalUrl}`
     );
     next();
 }
@@ -27,11 +24,11 @@ async function validateUserId(req, res, next)
         }
     } catch (err)
     {
-res.status(500).json({
-    message: 'user not found'
-})
+        res.status(500).json({
+            message: 'user not found'
+        });
     }
-
+    next();
 }
 
 function validateUser(req, res, next)
