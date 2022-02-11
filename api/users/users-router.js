@@ -50,8 +50,8 @@ router.delete('/:id', validateUserId, async (req, res, next) =>
 {
     try
     {
-        const deletedUser = await User.remove(req.params.id);
-        res.status(200).json(deletedUser);
+        await User.remove(req.params.id);
+        res.json(req.user);
     } catch (err)
     {
         next(err);
